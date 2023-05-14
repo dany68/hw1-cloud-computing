@@ -28,13 +28,22 @@
             .p-3 {
                 padding: 3px 5px;
             }
-            .button {
+            .btn {
                 background-color: blue;
                 border-radius: 10px;
                 padding: .6rem .8rem;
                 font-size: 1rem;
                 color: #fff;
                 cursor: pointer;
+            }
+            input {
+                border: 1px solid #ccc;
+                padding: .6rem .8rem;
+                border-radius: 10px;
+            }
+            a {
+                color: blue;
+                text-decoration: underline;
             }
         </style>
     </head>
@@ -48,16 +57,30 @@
                         <li>/api/entry?plate=X&parkingLot=X</li>
                         <li>/api/exit?ticketId=X</li>
                     </ul>
-                    <h2 class="mb-0">Form submission:</h2>
-                    <form action="/api/entry" method="POST" enctype="multipart/form-data">
-                        <input type="file" name="image" id="image">
-                        <button class="button" type="submit">Submit</button>
+                    <h2 class="mb-0">Entry - Form submission:</h2>
+                    <form action="/api/entry" method="GET">
+                        <div>
+                            <label>
+                                Plate number:
+                                <input type="text" name="plate">
+                            </label>
+                        </div>
+                        <label>
+                            Parking lot number:
+                            <input type="text" name="parkingLot">
+                        </label>
+                        <button class="btn" type="submit">Submit</button>
                     </form>
                 </div>
                 <div class="bg-white shadow sm:rounded-lg p-6">
                     <h2>Records:</h2>
                     @forelse ($parkings as $park)
-                        <p>{{ $park }}</p>
+                        <div class="flex items-center">
+                            <p style="padding-right:15px">{{ $park }}</p>
+                            @if (! $park->exited_at)
+                                <a href="/api/exit?ticketId={{ $park->id }}">Exit</a>
+                            @endif
+                        </div>
                     @empty
                         <p>Create a record at <span class="sm:rounded-lg p-3 bg-gray-100">/api/entry?plate=X&parkingLot=X</span></p>
                     @endforelse
